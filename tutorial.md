@@ -138,6 +138,7 @@ utility modules we will use.  At the very top of the file, write
   import XMonad.Hooks.ManageDocks
 
   import XMonad.Util.EZConfig
+  import XMonad.Util.Ungrab
 ```
 
 All of these imports are _unqualified_, meaning we are importing all of
@@ -215,7 +216,7 @@ config file, starting with main, now looks like:
       }
     `additionalKeys`
       [ ((mod4Mask .|. shiftMask, xK_z    ), spawn "xscreensaver-command -lock")
-      , ((controlMask           , xK_Print), spawn "sleep 0.2; scrot -s"       )
+      , ((controlMask           , xK_Print), unGrab *> spawn "scrot -s"        )
       , ((0                     , xK_Print), spawn "scrot"                     )
       ]
 ```
@@ -223,10 +224,17 @@ config file, starting with main, now looks like:
 Did you notice the `0` in the `xK_Print` line? The first part of the
 `(0, xK_Print)` tuple states what modifier keys (ctrl, alt, etc.) have
 to be held down for a pattern to match.  For the `Print` key, we don't
-need anything to be held down, and the zero indicates that.  The `sleep`
-before running the `scrot -s` command is to leave time for keys to be
-released before `scrot -s` tries to grab the keyboard.  Do note that you
-may need to install `scrot` if you don't have it on your system already.
+need anything to be held down, and the zero indicates that.  The
+`unGrab` before running the `scrot -s` command is to xmonad grab on the
+keyboard to be released before `scrot -s` tries to grab the keyboard
+itself.  The little `*>` operator essentially just sequences two
+functions, i.e. `f *> g` says
+
+  > first to `f` and, discarding any result that `f` may have given me,
+  > then do `g`.
+
+Do note that you may need to install `scrot` if you don't have it on
+your system already.
 
 If you—understandably—don't want to specify keys in this rather verbose
 fashion, there is also an alternative syntax provided by the excellent
@@ -241,7 +249,7 @@ We can change the above `main` function as follows:
       }
     `additionalKeysP`
       [ ("M-S-z"    , spawn "xscreensaver-command -lock")
-      , ("C-<Print>", spawn "sleep 0.2; scrot -s"       )
+      , ("C-<Print>", unGrab *> spawn "scrot -s"        )
       , ("<Print>"  , spawn "scrot"                     )
       ]
 ```
@@ -327,7 +335,7 @@ yourself by just looking at the documentation.  Ready?  Here we go:
       }
     `additionalKeysP`
       [ ("M-S-z"    , spawn "xscreensaver-command -lock")
-      , ("C-<Print>", spawn "sleep 0.2; scrot -s"       )
+      , ("C-<Print>", unGrab *> spawn "scrot -s"        )
       , ("<Print>"  , spawn "scrot"                     )
       ]
 ```
@@ -395,7 +403,7 @@ need some [Hacks] to make this work), I will show you how to add the
 relevant function to get "proper" fullscreen behaviour here.
 
 _IF YOU ARE ON A VERSION `< 0.17`_: The `ewmhFullscreen` function does
-  not exist yet.  Instead of it, you can try to add
+  not exist in these versions.  Instead of it, you can try to add
   `fullscreenEventHook` to your `handleEventHook` to achieve similar
   functionality (how to do this is explained in the documentation of
   [XMonad.Hooks.EwmhDesktops]).
@@ -411,7 +419,7 @@ the following way:
       }
     `additionalKeysP`
       [ ("M-S-z"    , spawn "xscreensaver-command -lock")
-      , ("C-<Print>", spawn "sleep 0.2; scrot -s"       )
+      , ("C-<Print>", unGrab *> spawn "scrot -s"        )
       , ("<Print>"  , spawn "scrot"                     )
       ]
 ```
@@ -434,7 +442,7 @@ config part `myConfig` for... obvious reasons.  It would look like this
       }
     `additionalKeysP`
       [ ("M-S-z"    , spawn "xscreensaver-command -lock")
-      , ("C-<Print>", spawn "sleep 0.2; scrot -s"       )
+      , ("C-<Print>", unGrab *> spawn "scrot -s"        )
       , ("<Print>"  , spawn "scrot"                     )
       ]
 ```
@@ -455,15 +463,15 @@ Onto the main dish.  Replace your `main` function above with:
       }
     `additionalKeysP`
       [ ("M-S-z"    , spawn "xscreensaver-command -lock")
-      , ("C-<Print>", spawn "sleep 0.2; scrot -s"       )
+      , ("C-<Print>", unGrab *> spawn "scrot -s"        )
       , ("<Print>"  , spawn "scrot"                     )
       ]
 ```
 
 _IF YOU ARE ON A VERSION `< 0.17`_: The `xmobarProp` function does not
-  exist yet.  Instead of it, use `xmobar` and carefully read the part
-  about pipes later on (`xmobar` uses pipes to make xmobar talk to
-  xmonad).
+  exist in these versions.  Instead of it, use `xmobar` and carefully
+  read the part about pipes later on (`xmobar` uses pipes to make xmobar
+  talk to xmonad).
 
 Notice how `$` became `.`!  The dot operator `(.)` in Haskell means
 function composition and is read from right to left.  What this means in
@@ -522,7 +530,10 @@ _IF YOU ARE ON A VERSION `< 0.17`_: As discussed above, the `xmobar`
 ## Configuring Xmobar
 
 Now, before this will work, we have to configure xmobar.  Here's a nice
-starting point.
+starting point.  Be aware that while I use Haskell syntax highlighting
+to make this pretty, the config, by default, is _not_ a Haskell file and
+thus can't execute arbitrary code.  If you do want to configure xmobar
+in Haskell there is a note about that at the end of this section.
 
 ``` haskell
   Config { overrideRedirect = False
@@ -594,7 +605,7 @@ It is also possible to completely configure xmobar in Haskell, just like
 xmonad.  If you want to know more about that, you can check out the
 [xmobar.hs] example in the official documentation.  For a more
 complicated example, you can also check out [jao's xmobar.hs] (he's the
-author of xmobar).
+current maintainer of xmobar).
 
 ## Changing What XMonad Sends to Xmobar
 
@@ -797,7 +808,7 @@ one used above, you can find it [here](https://i.imgur.com/9MQHuZx.png).
 There may be some programs that you don't want xmonad to tile.  The
 classic example is Gimp; it pops up all sorts of new windows all the
 time, and they work best at defined sizes.  It makes sense for xmonad to
-ignore these kinds of windows.
+float these kinds of windows by default.
 
 This kind of behaviour can be achieved via the `manageHook`, which runs
 when windows are created.  There are several functions to help you match
@@ -845,7 +856,7 @@ our `manageHook` bit of `myConfig` looks like:
       }
     `additionalKeysP`
       [ ("M-S-z"    , spawn "xscreensaver-command -lock")
-      , ("C-<Print>", spawn "sleep 0.2; scrot -s"       )
+      , ("C-<Print>", unGrab *> spawn "scrot -s"        )
       , ("<Print>"  , spawn "scrot"                     )
       ]
 ```
@@ -863,6 +874,7 @@ this:
   import XMonad.Hooks.ManageHelpers
 
   import XMonad.Util.EZConfig
+  import XMonad.Util.Ungrab
 
   import XMonad.Layout.Magnifier
   import XMonad.Layout.ThreeColumns
@@ -886,7 +898,7 @@ this:
       }
     `additionalKeysP`
       [ ("M-S-z"    , spawn "xscreensaver-command -lock")
-      , ("C-<Print>", spawn "sleep 0.2; scrot -s"       )
+      , ("C-<Print>", unGrab *> spawn "scrot -s"        )
       , ("<Print>"  , spawn "scrot"                     )
       ]
 
@@ -946,7 +958,7 @@ If you're not a fan of real-time interactions, you can also post to the
 
 ## Trouble?
 
-Check `~/.xsession-errors` or your distributions equivalent first.  If
+Check `~/.xsession-errors` or your distribution's equivalent first.  If
 you're in a distribution that does not log into a file automatically,
 you will have to do this manually.  For example, I have
 
