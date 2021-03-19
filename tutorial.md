@@ -150,7 +150,7 @@ adding the necessary imports to the statement in parentheses.  For
 example
 
 ``` haskell
-  import XMonad.Util.EZConfig (additionalKeys, additionalKeysP)
+  import XMonad.Util.EZConfig (additionalKeysP)
 ```
 
 For the purposes of this tutorial, we will be importing everything
@@ -205,44 +205,12 @@ apart the `xmonad` function and the `def { .. }` record update visually.
 It's superfluous in this example, but that will change soon enough so
 it's worth introducing it here as well.
 
-What if we wanted to add other keybindings?  Say I also want to bind
-`M-S-z` to lock my screen with the screensaver, `C-<Print>` to take a
+What if we wanted to add other keybindings?  Say you also want to bind
+`M-S-z` to lock your screen with the screensaver, `C-<Print>` to take a
 snapshot of one window, and `<Print>` to take a snapshot of the entire
-screen.  This can be achieved with the `additionalKeys` function.  My
-config file, starting with main, now looks like:
-
-``` haskell
-  main :: IO ()
-  main = xmonad $ def
-      { modMask = mod4Mask  -- Rebind Mod to the Super key
-      }
-    `additionalKeys`
-      [ ((mod4Mask .|. shiftMask, xK_z    ), spawn "xscreensaver-command -lock")
-      , ((controlMask           , xK_Print), unGrab *> spawn "scrot -s"        )
-      , ((0                     , xK_Print), spawn "scrot"                     )
-      ]
-```
-
-Did you notice the `0` in the `xK_Print` line? The first part of the
-`(0, xK_Print)` tuple states what modifier keys (ctrl, alt, etc.) have
-to be held down for a pattern to match.  For the `Print` key, we don't
-need anything to be held down, and the zero indicates that.  The
-`unGrab` before running the `scrot -s` command is to xmonad grab on the
-keyboard to be released before `scrot -s` tries to grab the keyboard
-itself.  The little `*>` operator essentially just sequences two
-functions, i.e. `f *> g` says
-
-  > first to `f` and, discarding any result that `f` may have given me,
-  > then do `g`.
-
-Do note that you may need to install `scrot` if you don't have it on
-your system already.
-
-If you—understandably—don't want to specify keys in this rather verbose
-fashion, there is also an alternative syntax provided by the excellent
-[XMonad.Util.EZConfig] module; luckily we already have this imported!
-
-We can change the above `main` function as follows:
+screen.  This can be achieved with the `additionalKeysP` function from
+the [XMonad.Util.EZConfig] module—luckily we already have this imported!
+My config file, starting with main, now looks like:
 
 ``` haskell
   main :: IO ()
@@ -261,6 +229,17 @@ That syntax look familiar?
 You can find the names for special keys in the `EZConfig` documentation.
 
 I will cover setting up the screensaver later in this tutorial.
+
+The `unGrab` before running the `scrot -s` command tells xmonad to
+release its keyboard grab before `scrot -s` tries to grab the keyboard
+itself.  The little `*>` operator essentially just sequences two
+functions, i.e. `f *> g` says
+
+  > first to `f` and, discarding any result that `f` may have given me,
+  > then do `g`.
+
+Do note that you may need to install `scrot` if you don't have it on
+your system already.
 
 What if we wanted to augment our xmonad experience just a little more?
 We already have `xmonad-contrib`, which means endless possibilities!
@@ -759,8 +738,11 @@ and a power-manager:
 First, configure xscreensaver how you like it with the
 `xscreensaver-demo` command.  Now, we will set these things up in
 `~/.xinitrc` (we could also do most of this in xmonad's `startupHook`,
-but `~/.xinitrc` is perhaps more standard).  That file may wind up
-looking like this:
+but `~/.xinitrc` is perhaps more standard).  If you want to use xmonad
+with a desktop environment, see [Basic Desktop Environment Integration]
+for how to do this.
+
+Your `~/.xinitrc` may wind up looking like this:
 
 ``` shell
   #!/bin/sh
@@ -1009,6 +991,7 @@ documented, and most aren't very pretty either :)
 [xmonad guided tour]: https://xmonad.org/tour.html
 [xmonad mailing list]: https://mail.haskell.org/mailman/listinfo/xmonad
 [xmonad's GitHub page]: https://github.com/xmonad/xmonad
+[Basic Desktop Environment Integration]: https://wiki.haskell.org/Xmonad/Basic_Desktop_Environment_Integration
 
 [Hacks]: TODO: https://hackage.haskell.org/package/xmonad-contrib/docs/XMonad-Util-Hacks.html
 [PP record]: https://hackage.haskell.org/package/xmonad-contrib/docs/XMonad-Hooks-DynamicLog.html#t:PP
