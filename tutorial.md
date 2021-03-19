@@ -64,6 +64,9 @@ the ability to magnify stack windows with [XMonad.Layout.Magnifier]:
 
 So let's get started!
 
+[XMonad.Layout.Magnifier]: https://hackage.haskell.org/package/xmonad-contrib/docs/XMonad-Layout-Magnifier.html
+[XMonad.Layout.ThreeColumns]: https://hackage.haskell.org/package/xmonad-contrib/docs/XMonad-Layout-ThreeColumns.html
+
 ## Preliminaries
 
 First you'll want to install xmonad.  You can either do this with your
@@ -431,6 +434,13 @@ config part `myConfig` for... obvious reasons.  It would look like this
 
 Much better!
 
+[Hacks]: https://hackage.haskell.org/package/xmonad-contrib/docs/XMonad-Util-Hacks.html
+[XMonad.Config]: https://github.com/xmonad/xmonad/blob/master/src/XMonad/Config.hs
+[XMonad.Util.EZConfig]: https://hackage.haskell.org/package/xmonad-contrib/docs/XMonad-Util-EZConfig.html
+[XMonad.Layout.Magnifier]: https://hackage.haskell.org/package/xmonad-contrib/docs/XMonad-Layout-Magnifier.html
+[XMonad.Hooks.EwmhDesktops]: https://hackage.haskell.org/package/xmonad-contrib/docs/XMonad-Hooks-EwmhDesktops.html
+[XMonad.Layout.ThreeColumns]: https://hackage.haskell.org/package/xmonad-contrib/docs/XMonad-Layout-ThreeColumns.html
+
 ## Make XMonad and Xmobar Talk to Each Other
 
 Onto the main dish.  Replace your `main` function above with:
@@ -508,6 +518,8 @@ _IF YOU ARE ON A VERSION `< 0.17`_: As discussed above, the `xmobar`
   function uses pipes, so you actually do want to use the `StdinReader`.
   Simply replace _all_ occurences of `XMonadLog` with `StdinReader`
   below (don't forget the template!)
+
+[XMonad.Util.ClickableWorkspaces]: https://hackage.haskell.org/package/xmonad-contrib/docs/XMonad-Util-ClickableWorkspaces.html
 
 ## Configuring Xmobar
 
@@ -716,6 +728,8 @@ like them.  If not, remove that part and try something else.  If you do,
 try to understand how that particular piece of code works.  You'll have
 something approaching the above that you fully understand in no time!
 
+[PP record]: https://hackage.haskell.org/package/xmonad-contrib/docs/XMonad-Hooks-DynamicLog.html#t:PP
+
 ## Configuring Related Utilities
 
 So now you've got a status bar and xmonad.  We still need a few more
@@ -845,6 +859,9 @@ our `manageHook` bit of `myConfig` looks like:
       , ("<Print>"  , spawn "scrot"                     )
       ]
 ```
+
+[XMonad.ManageHook]: https://hackage.haskell.org/package/xmonad/docs/XMonad-ManageHook.html
+[XMonad.Hooks.ManageHelpers]: https://hackage.haskell.org/package/xmonad-contrib/docs/XMonad-Hooks-ManageHelpers.html
 
 ## The Whole Thing
 
@@ -992,18 +1009,6 @@ documented, and most aren't very pretty either :)
 [xmonad mailing list]: https://mail.haskell.org/mailman/listinfo/xmonad
 [xmonad's GitHub page]: https://github.com/xmonad/xmonad
 [Basic Desktop Environment Integration]: https://wiki.haskell.org/Xmonad/Basic_Desktop_Environment_Integration
-
-[Hacks]: TODO: https://hackage.haskell.org/package/xmonad-contrib/docs/XMonad-Util-Hacks.html
-[PP record]: https://hackage.haskell.org/package/xmonad-contrib/docs/XMonad-Hooks-DynamicLog.html#t:PP
-[XMonad.Config]: https://github.com/xmonad/xmonad/blob/master/src/XMonad/Config.hs
-[XMonad.ManageHook]: https://hackage.haskell.org/package/xmonad/docs/XMonad-ManageHook.html
-[XMonad.Util.EZConfig]: https://hackage.haskell.org/package/xmonad-contrib/docs/XMonad-Util-EZConfig.html
-[XMonad.Layout.Magnifier]: https://hackage.haskell.org/package/xmonad-contrib/docs/XMonad-Layout-Magnifier.html
-[XMonad.Doc.Contributing]: https://hackage.haskell.org/package/xmonad-contrib/docs/XMonad-Doc-Configuring.html
-[XMonad.Hooks.EwmhDesktops]: https://hackage.haskell.org/package/xmonad-contrib/docs/XMonad-Hooks-EwmhDesktops.html
-[XMonad.Layout.ThreeColumns]: https://hackage.haskell.org/package/xmonad-contrib/docs/XMonad-Layout-ThreeColumns.html
-[XMonad.Hooks.ManageHelpers]: https://hackage.haskell.org/package/xmonad-contrib/docs/XMonad-Hooks-ManageHelpers.html
-[XMonad.Util.ClickableWorkspaces]: https://hackage.haskell.org/package/xmonad-contrib/docs/XMonad-Util-ClickableWorkspaces.html
 
 [xmobar]: https://xmobar.org/
 [quick-start.org]: https://github.com/jaor/xmobar/blob/master/doc/quick-start.org#configuration-options
