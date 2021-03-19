@@ -122,10 +122,12 @@ window manager of ours!
 Xmonad's configuration file is written in [Haskell]—but don't worry, I
 won't assume that you know the language for the purposes of this
 tutorial.  The configuration file can either reside within
-`$XDG_CONFIG_HOME/xmonad`, `~/.xmonad`, or `$XMONAD_CONFIG_DIR` (see
-`man 1 xmonad` for further details).  I will use
-`$XDG_CONFIG_HOME/xmonad` for the purposes of this tutorial, which is
-`~/.config/xmonad` on my machine.
+`$XDG_CONFIG_HOME/xmonad`, `~/.xmonad`, or `$XMONAD_CONFIG_DIR`; see
+`man 1 xmonad` for further details (the like of `$XDG_CONFIG_HOME` is
+called a [shell variable]).  I will use `$XDG_CONFIG_HOME/xmonad` for
+the purposes of this tutorial, which is `~/.config/xmonad` on my
+machine—the `~/.config` directory is also the place where things will
+default to should `$XDG_CONFIG_HOME` not be set.
 
 First, we need to create `~/.config/xmonad` and, in this directory, a
 file called `xmonad.hs`.  We'll start off with importing some of the
@@ -286,14 +288,15 @@ myLayout = tiled ||| Mirror tiled ||| Full
 ```
 
 The so-called `where`-clause above simply consists of local declarations
-that might clutter things up where they all declared at the top level.
-It also gives us the chance of documenting what the individual numbers
-means!  If you don't care for this (or have internalized it already) you
-could also write
+that might clutter things up where they all declared at the top-level
+like this
 
 ``` haskell
 myLayout = Tall 1 (1/2) (3/100) ||| Mirror (Tall 1 (1/2) (3/100)) ||| Full
 ```
+
+It also gives us the chance of documenting what the individual numbers
+means!
 
 Now we can add the layout according to the [XMonad.Layout.ThreeColumns]
 documentation.  At this point, I would encourage you to try this
@@ -324,7 +327,7 @@ myLayout = tiled ||| Mirror tiled ||| Full ||| threeCol
 ```
 
 Now we just need to tell xmonad that we want to use this modified
-`layoutHook` instead of the default.  Again, try to figure this out for
+`layoutHook` instead of the default.  Again, try to reason this out for
 yourself by just looking at the documentation.  Ready?  Here we go:
 
 ``` haskell
@@ -343,7 +346,7 @@ yourself by just looking at the documentation.  Ready?  Here we go:
 But we also wanted to add magnification, right?  Luckily for us, there's
 a module for that as well!  It's called [XMonad.Layout.Magnifier].
 Again, take a look at the documentation yourself before reading on—see
-if you can figure out what to do for yourself.  I will pick the
+if you can reason out what to do for yourself.  I will pick the
 `magnifiercz'` modifier from the library; it magnifies a window by a
 given amount, but only if it is a stack window.  Let's add it to our
 three column layout thusly:
@@ -588,7 +591,7 @@ indicator, and of course the data from xmonad via `XMonadLog`.
 The `EGPF` in the weather command is a particular station.  Replace both
 (!) occurences of it with your choice of ICAO weather stations.  For a
 list of ICAO codes you can visit the relevant [wikipedia page].  You can
-of course monitor more than one if you like, see xmobar's [weather
+of course monitor more than one if you like; see xmobar's [weather
 monitor] documentation for further details.
 
 The template then combines them together.  The `alignSep` variable
@@ -814,9 +817,9 @@ This kind of behaviour can be achieved via the `manageHook`, which runs
 when windows are created.  There are several functions to help you match
 on a certain window in [XMonad.ManageHook].  For example, suppose we'd
 want to match on the class name of the application.  With the
-application open, open another terminal and invoke the `xprompt`
-command.  Then click on the application that you would like to know the
-properties of.  In the case of GIMP I see (among other things)
+application open, open another terminal and invoke the `xprop` command.
+Then click on the application that you would like to know the properties
+of.  In the case of GIMP I see (among other things)
 
 ``` shell
   WM_CLASS(STRING) = "gimp", "Gimp"
@@ -1000,6 +1003,7 @@ documented, and most aren't very pretty either :)
 [webchat]: https://webchat.freenode.net/
 [about xmonad]: https://xmonad.org/about.html  TODO: mention this somewhere once it's updated on the new site
 [matrix server]: https://matrix.to/#/#freenode_#xmonad:matrix.org
+[shell variable]: https://www.shellscript.sh/variables1.html
 [xmonad-testing]: https://github.com/xmonad/xmonad-testing
 [xmonad subreddit]: https://old.reddit.com/r/xmonad/
 [xmonad guided tour]: https://xmonad.org/tour.html
