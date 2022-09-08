@@ -438,10 +438,14 @@ import XMonad.Hooks.StatusBar
 import XMonad.Hooks.StatusBar.PP
 ```
 
+--
+
 _IF YOU ARE ON A VERSION `< 0.17.0`_: The `XMonad.Hooks.StatusBar` and
   `XMonad.Hooks.StatusBar.PP` modules don't exist yet.  You can find
   everything you need in the `XMonad.Hooks.DynamicLog` module, so remove
   these two imports.
+
+--
 
 Replace your `main` function above with:
 
