@@ -15,7 +15,7 @@
 --
 -----------------------------------------------------------------------------
 
-module XMonad.Main (xmonad, launch) where
+module XMonad.Main (xmonad, buildLaunch, launch) where
 
 import System.Locale.SetLocale
 import qualified Control.Exception as E
